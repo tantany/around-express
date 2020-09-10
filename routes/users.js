@@ -5,13 +5,11 @@ const path = require('path');
 const dataPath = path.join(__dirname, '..', 'data', 'users.json');
 
 const getDataFromFile = (pathToFile) => fs.readFile(pathToFile, { encoding: 'utf-8' })
-  .then((data) => JSON.parse(data))
-  .catch((err) => console.log(err));
+  .then((data) => JSON.parse(data));
 
 const getUsers = (req, res) => getDataFromFile(dataPath)
-  .then((users) => {
-    res.status(200).send(users);
-  });
+  .then((users) => res.status(200).send(users))
+  .catch(() => res.status(404).send({ message: 'Requested resource not found' }));
 
 const getUser = (req, res) => getDataFromFile(dataPath)
   .then((users) => users.find((user) => user._id === req.params.id))
@@ -19,10 +17,10 @@ const getUser = (req, res) => getDataFromFile(dataPath)
     if (user) {
       res.status(200).send(user);
     } else {
-      res.status(400).send({ message: 'User ID not found' });
+      res.status(404).send({ message: 'User ID not found' });
     }
   })
-  .catch(() => res.status(400).send({ message: 'Requested resource not found' }));
+  .catch(() => res.status(404).send({ message: 'Requested resource not found' }));
 
 userRouter.get('/users', getUsers);
 
