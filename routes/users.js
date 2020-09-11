@@ -9,7 +9,7 @@ const getDataFromFile = (pathToFile) => fs.readFile(pathToFile, { encoding: 'utf
 
 const getUsers = (req, res) => getDataFromFile(dataPath)
   .then((users) => res.status(200).send(users))
-  .catch(() => res.status(404).send({ message: 'Requested resource not found' }));
+  .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
 
 const getUser = (req, res) => getDataFromFile(dataPath)
   .then((users) => users.find((user) => user._id === req.params.id))
@@ -20,7 +20,7 @@ const getUser = (req, res) => getDataFromFile(dataPath)
       res.status(404).send({ message: 'User ID not found' });
     }
   })
-  .catch(() => res.status(404).send({ message: 'Requested resource not found' }));
+  .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
 
 userRouter.get('/users', getUsers);
 
